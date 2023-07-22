@@ -7,16 +7,27 @@ pipeline {
                 git url: 'https://github.com/LondheShubham153/node-todo-cicd.git', branch: 'master' 
             }
         }
+
+        stage('Code Analysis with SonarQube') {
+      environment {
+        SONAR_URL = "http://192.168.29.144:9000"
+      }
+      steps {
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+          sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        }
+      }
+    }
         stage('Build and Test'){
             steps{
-                sh 'docker build . -t trainwithshubham/node-todo-test:latest'
+                sh 'docker build . -t devopstraning1235/node-todo-test:${BUILD_NUMBER}'
             }
         }
         stage('Push'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
         	     sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                 sh 'docker push trainwithshubham/node-todo-test:latest'
+                 sh 'docker push devopstraning1235/node-todo-test:${BUILD_NUMBER}'
                 }
             }
         }
