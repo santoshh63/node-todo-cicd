@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: devopstraning1235/node-todo-demo:${BUILD_NUMBER}
+        image: devopstraning1235/node-todo-demo:replaceImageTag
         ports:
         - containerPort: 8000
