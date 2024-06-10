@@ -1,1 +1,36 @@
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:14.17.0  # You can use the desired Node.js version
+
+jobs:
+  install:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm install
+
+  test:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Run Tests
+          command: npm test
+
+workflows:
+  version: 2
+  node-todo-ci:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
 
